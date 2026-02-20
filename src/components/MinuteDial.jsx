@@ -1,28 +1,26 @@
 import useDragClock from '../hooks/useDragClock';
 
-export default function MinuteDial({ totalSeconds, setTotalSeconds, activeDrag, setActiveDrag }) {
+export default function MinuteDial({ totalSeconds, setTotalSeconds, activeDrag, setActiveDrag, isDarkMode }) {
     const type = 'minutes';
-    const { svgRef, handlePointerDown } = useDragClock({
-        type, setTotalSeconds, activeDrag, setActiveDrag, 
-        step: 6,
-        secondsPerRevolution: 3600
-    });
+    const { svgRef, handlePointerDown } = useDragClock({ type, setTotalSeconds, activeDrag, setActiveDrag, step: 6, secondsPerRevolution: 3600 });
 
     const angle = ((totalSeconds % 3600) / 60) * 6;
-    const handColor = '#1e293b'; 
+    const handColor = isDarkMode ? '#e2e8f0' : '#1e293b'; 
+    const thickColor = isDarkMode ? '#e2e8f0' : '#1e293b';
+    const thinColor = isDarkMode ? '#475569' : '#94a3b8';
     const radius = 35;
 
     const ticks = Array.from({ length: 60 }).map((_, i) => {
         const isThick = i % 5 === 0;
         return (
-            <line key={i} x1="50" y1={isThick ? "10" : "6"} x2="50" y2="2" stroke={isThick ? "#1e293b" : "#94a3b8"} strokeWidth={isThick ? "3" : "1"} transform={`rotate(${i * 6} 50 50)`} />
+            <line key={i} x1="50" y1={isThick ? "10" : "6"} x2="50" y2="2" stroke={isThick ? thickColor : thinColor} strokeWidth={isThick ? "3" : "1"} transform={`rotate(${i * 6} 50 50)`} />
         );
     });
 
     return (
         <div className="flex flex-col items-center group">
             <div 
-                className="clock-dial relative rounded-full bg-white shadow-xl border-[5px] border-slate-800 cursor-grab active:cursor-grabbing hover:scale-105 transition-transform duration-200"
+                className="clock-dial relative rounded-full shadow-xl dark:shadow-slate-900/50 border-[5px] cursor-grab active:cursor-grabbing hover:scale-105 transition-all duration-300 bg-white dark:bg-slate-800 border-slate-800 dark:border-slate-700"
                 style={{ width: '220px', height: '220px' }}
                 onPointerDown={handlePointerDown} ref={svgRef} title="Drag to change minutes"
             >
@@ -32,10 +30,10 @@ export default function MinuteDial({ totalSeconds, setTotalSeconds, activeDrag, 
                         <line x1="50" y1="50" x2="50" y2={50 - radius} stroke={handColor} strokeWidth="2.5" strokeLinecap="round" />
                         <circle cx="50" cy={50 - radius} r="3.5" fill={handColor} />
                     </g>
-                    <circle cx="50" cy="50" r="4" fill="#1e293b" />
+                    <circle cx="50" cy="50" r="4" fill={handColor} />
                 </svg>
             </div>
-            <h3 className="mt-5 text-2xl font-bold capitalize text-slate-800">Minutes</h3>
+            <h3 className="mt-5 text-2xl font-bold capitalize text-slate-800 dark:text-slate-200 transition-colors">Minutes</h3>
         </div>
     );
 }
