@@ -1,7 +1,8 @@
 # learn-analog-clock
 An interactive, educational web application built to help children and young adults understand how analog clocks work. By dragging the individual hands for seconds, minutes, and hours, users can see in real-time how the units of time relate to one another.
 
-![Screenshot_20-2-2026_31922_localhost](https://github.com/user-attachments/assets/396053d1-5d3f-43e4-88dd-44e53029c837)
+<img src="https://github.com/user-attachments/assets/f060e9cb-9473-4459-adc3-141fdf52a0c8" alt="Screenshot_21-2-2026_0502_localhost" width="300" height="auto">
+
 
 ## 💡 Background & Motivation
 
