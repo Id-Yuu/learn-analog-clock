@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import SecondDial from './components/SecondDial';
 import MinuteDial from './components/MinuteDial';
 import HourDial from './components/HourDial';
+import FullClockDial from './components/FullClockDial';
 import DigitalClock from './components/DigitalClock';
-import ThemeToggle from './components/ThemeToggle';
+import ThemeToggle from './components/ThemeToggle'; 
 
 export default function App() {
     const [time, setTime] = useState(0);
@@ -11,7 +12,6 @@ export default function App() {
     const [practiceMode, setPracticeMode] = useState(false);
     const [targetTime, setTargetTime] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
-    
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     const resetToCurrent = () => {
@@ -50,36 +50,32 @@ export default function App() {
 
     return (
         <div className={isDarkMode ? 'dark' : ''}>
-            <div className="min-h-screen flex flex-col items-center py-12 px-6 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-                <div className="w-full max-w-5xl flex justify-between items-center mb-8">
+            <div className="min-h-screen flex flex-col items-center py-10 px-6 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+                <div className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight transition-colors">
                         Time Learning Clock
                     </h1>
-                    <ThemeToggle 
-                        isDarkMode={isDarkMode} 
-                        toggleTheme={() => setIsDarkMode(!isDarkMode)} 
-                    />
+                    <ThemeToggle isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
                 </div>
-                <div className="h-14 flex items-center mb-6">
+                
+                <p className="text-slate-500 dark:text-slate-400 font-medium text-lg mb-8 transition-colors text-center">
                     {activeDrag ? (
-                        <span className="text-indigo-600 dark:text-indigo-300 font-semibold text-lg bg-indigo-50 dark:bg-indigo-900/50 px-4 py-2 rounded-full shadow-sm transition-colors">
-                            💡 Dragging the {activeDrag} hand...
-                        </span>
+                        <span className="text-indigo-600 dark:text-indigo-400">💡 Dragging the {activeDrag} hand...</span>
                     ) : (
-                        <span className="text-slate-500 dark:text-slate-400 font-medium text-lg transition-colors">
-                            Hover and drag any hand to explore how time works!
-                        </span>
+                        "Hover and drag any hand to explore how time works!"
                     )}
-                </div>
-                <div className="mb-10 w-full max-w-3xl flex justify-between items-center bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+                </p>
+
+                <div className="mb-12 w-full max-w-4xl flex flex-col md:flex-row justify-between items-center bg-white dark:bg-slate-800 p-3 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300 min-h-[72px]">
                     <button 
                         onClick={togglePractice}
-                        className={`px-6 py-2 rounded-xl font-bold text-white transition-colors ${practiceMode ? 'bg-red-500 hover:bg-red-600' : 'bg-indigo-500 hover:bg-indigo-600'}`}
+                        className={`px-6 py-2 rounded-xl font-bold text-white transition-colors w-full md:w-auto ${practiceMode ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-indigo-500 hover:bg-indigo-600'}`}
                     >
-                        {practiceMode ? "End Practice" : "Start Practice Mode"}
+                        {practiceMode ? "End Practice Mode" : "Start Practice Mode"}
                     </button>
+
                     {practiceMode && targetTime !== null && (
-                        <div className="flex items-center gap-4 text-xl">
+                        <div className="flex items-center gap-4 mt-4 md:mt-0 px-4">
                             <span className="font-medium text-slate-600 dark:text-slate-300">Set the clock to: 
                                 <strong className="ml-2 text-2xl text-slate-800 dark:text-white">{formatPracticeLabel(targetTime)}</strong>
                             </span>
@@ -91,15 +87,34 @@ export default function App() {
                         </div>
                     )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-y-16 md:gap-x-32 mb-12 items-center justify-items-center">
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-16 mb-16 items-center justify-items-center w-full max-w-4xl">
                     <SecondDial isDarkMode={isDarkMode} totalSeconds={time} setTotalSeconds={setTime} activeDrag={activeDrag} setActiveDrag={setActiveDrag} />
-                    <HourDial isDarkMode={isDarkMode} totalSeconds={time} setTotalSeconds={setTime} activeDrag={activeDrag} setActiveDrag={setActiveDrag} />
                     <MinuteDial isDarkMode={isDarkMode} totalSeconds={time} setTotalSeconds={setTime} activeDrag={activeDrag} setActiveDrag={setActiveDrag} />
-                    <DigitalClock time={time} />
+                    <HourDial isDarkMode={isDarkMode} totalSeconds={time} setTotalSeconds={setTime} activeDrag={activeDrag} setActiveDrag={setActiveDrag} />
                 </div>
+
+                <div className="relative w-full max-w-4xl border border-slate-300 dark:border-slate-600 rounded-xl p-8 pt-12 mb-12 bg-transparent">
+                    <span className="absolute -top-3 left-6 bg-slate-50 dark:bg-slate-900 px-3 text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
+                        Output
+                    </span>
+                    
+                    <div className="flex flex-col md:flex-row items-center justify-around gap-12">
+                        <div className="flex flex-col items-center">
+                            <FullClockDial time={time} isDarkMode={isDarkMode} />
+                            <h3 className="mt-5 text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">Clock</h3>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                            <DigitalClock time={time} isDarkMode={isDarkMode} />
+                            <h3 className="mt-5 text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">Clock</h3>
+                        </div>
+                    </div>
+                </div>
+
                 <button 
                     onClick={resetToCurrent}
-                    className="mt-4 px-8 py-4 bg-slate-800 dark:bg-slate-200 hover:bg-slate-700 dark:hover:bg-slate-300 text-white dark:text-slate-900 font-bold rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95"
+                    className="px-8 py-4 bg-slate-800 dark:bg-slate-200 hover:bg-slate-700 dark:hover:bg-slate-300 text-white dark:text-slate-900 font-bold rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95"
                 >
                     Reset to Current Time
                 </button>
