@@ -1,25 +1,44 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import SecondDial from './components/SecondDial';
 import MinuteDial from './components/MinuteDial';
 import HourDial from './components/HourDial';
 import FullClockDial from './components/FullClockDial';
 import DigitalClock from './components/DigitalClock';
 import ThemeToggle from './components/ThemeToggle'; 
+import GuideModal from './components/GuideModal';
+import FloatingButtonGroup from './components/FloatingButtonGroup';
+import VideoModal from './components/VideoModal';
 
 export default function App() {
+    const { t } = useTranslation();
     const [time, setTime] = useState(0);
     const [activeDrag, setActiveDrag] = useState(null);
     const [practiceMode, setPracticeMode] = useState(false);
     const [targetTime, setTargetTime] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    
+    const [isGuideOpen, setIsGuideOpen] = useState(false);
+    const [isVideoOpen, setIsVideoOpen] = useState(false);
+
+    useEffect(() => {
+        resetToCurrent();
+        const hasSeenGuide = localStorage.getItem('timeClock_hasSeenGuide');
+        if (!hasSeenGuide) {
+            setIsGuideOpen(true);
+        }
+    }, []);
+
+    const closeGuide = () => {
+        setIsGuideOpen(false);
+        localStorage.setItem('timeClock_hasSeenGuide', 'true');
+    };
 
     const resetToCurrent = () => {
         const now = new Date();
         setTime(now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds());
     };
-
-    useEffect(() => resetToCurrent(), []);
 
     useEffect(() => {
         if (practiceMode && targetTime !== null) {
@@ -50,19 +69,21 @@ export default function App() {
 
     return (
         <div className={isDarkMode ? 'dark' : ''}>
-            <div className="min-h-screen flex flex-col items-center py-10 px-6 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-                <div className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div className="min-h-screen flex flex-col items-center py-10 px-6 bg-slate-50 dark:bg-slate-900 transition-colors duration-300 relative">
+                <div className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-center mb-6 gap-4 mt-8 md:mt-0">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight transition-colors">
-                        Time Learning Clock
+                        {t('appTitle')}
                     </h1>
                     <ThemeToggle isDarkMode={isDarkMode} toggleTheme={() => setIsDarkMode(!isDarkMode)} />
                 </div>
                 
                 <p className="text-slate-500 dark:text-slate-400 font-medium text-lg mb-8 transition-colors text-center">
                     {activeDrag ? (
-                        <span className="text-indigo-600 dark:text-indigo-400">💡 Dragging the {activeDrag} hand...</span>
+                        <span className="text-indigo-600 dark:text-indigo-400">
+                            {t('dragging', { hand: t(activeDrag === 'seconds' ? 'second' : activeDrag) })}
+                        </span>
                     ) : (
-                        "Hover and drag any hand to explore how time works!"
+                        t('hoverDrag')
                     )}
                 </p>
 
@@ -71,18 +92,18 @@ export default function App() {
                         onClick={togglePractice}
                         className={`px-6 py-2 rounded-xl font-bold text-white transition-colors w-full md:w-auto ${practiceMode ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-indigo-500 hover:bg-indigo-600'}`}
                     >
-                        {practiceMode ? "End Practice Mode" : "Start Practice Mode"}
+                        {practiceMode ? t('endPractice') : t('startPractice')}
                     </button>
 
                     {practiceMode && targetTime !== null && (
                         <div className="flex items-center gap-4 mt-4 md:mt-0 px-4">
-                            <span className="font-medium text-slate-600 dark:text-slate-300">Set the clock to: 
+                            <span className="font-medium text-slate-600 dark:text-slate-300">{t('setClockTo')} 
                                 <strong className="ml-2 text-2xl text-slate-800 dark:text-white">{formatPracticeLabel(targetTime)}</strong>
                             </span>
                             {isSuccess ? (
-                                <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 font-bold px-4 py-1 rounded-lg">Correct! 🎉</span>
+                                <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 font-bold px-4 py-1 rounded-lg">{t('correct')}</span>
                             ) : (
-                                <button onClick={generatePractice} className="text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 px-3 py-1 rounded-lg text-slate-600 dark:text-slate-300 font-semibold transition-colors">Skip</button>
+                                <button onClick={generatePractice} className="text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 px-3 py-1 rounded-lg text-slate-600 dark:text-slate-300 font-semibold transition-colors">{t('skip')}</button>
                             )}
                         </div>
                     )}
@@ -96,18 +117,18 @@ export default function App() {
 
                 <div className="relative w-full max-w-4xl border border-slate-300 dark:border-slate-600 rounded-xl p-8 pt-12 mb-12 bg-transparent">
                     <span className="absolute -top-3 left-6 bg-slate-50 dark:bg-slate-900 px-3 text-sm font-semibold text-slate-500 dark:text-slate-400 transition-colors">
-                        Output
+                        {t('output')}
                     </span>
                     
                     <div className="flex flex-col md:flex-row items-center justify-around gap-12">
                         <div className="flex flex-col items-center">
                             <FullClockDial time={time} isDarkMode={isDarkMode} />
-                            <h3 className="mt-5 text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">Clock</h3>
+                            <h3 className="mt-5 text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">{t('clock')}</h3>
                         </div>
 
                         <div className="flex flex-col items-center">
-                            <DigitalClock time={time} isDarkMode={isDarkMode} />
-                            <h3 className="mt-5 text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">Clock</h3>
+                            <DigitalClock time={time} />
+                            <h3 className="mt-5 text-2xl font-bold text-slate-800 dark:text-slate-100 transition-colors">{t('clock')}</h3>
                         </div>
                     </div>
                 </div>
@@ -116,8 +137,15 @@ export default function App() {
                     onClick={resetToCurrent}
                     className="px-8 py-4 bg-slate-800 dark:bg-slate-200 hover:bg-slate-700 dark:hover:bg-slate-300 text-white dark:text-slate-900 font-bold rounded-xl shadow-lg transition-all hover:scale-105 active:scale-95"
                 >
-                    Reset to Current Time
+                    {t('reset')}
                 </button>
+
+                <FloatingButtonGroup 
+                    onOpenGuide={() => setIsGuideOpen(true)} 
+                    onOpenVideo={() => setIsVideoOpen(true)} 
+                />
+                <GuideModal isOpen={isGuideOpen} onClose={closeGuide} />
+                <VideoModal isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
             </div>
         </div>
     );

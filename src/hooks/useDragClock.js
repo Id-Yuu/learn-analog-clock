@@ -14,7 +14,7 @@ export default function useDragClock({ type, setTotalSeconds, activeDrag, setAct
         const dy = e.clientY - cy;
         
         let rawAngle = Math.atan2(dy, dx) * (180 / Math.PI);
-        prevAngleRef.current = Math.round(rawAngle / step) * step;
+        prevAngleRef.current = Math.round(rawAngle / step) * step; 
     };
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export default function useDragClock({ type, setTotalSeconds, activeDrag, setAct
 
             setTotalSeconds(prev => {
                 let next = prev + secondsDelta;
-                if (next < 0) next += 86400;
+                if (next < 0) next += 86400; 
                 return next % 86400;
             });
         };

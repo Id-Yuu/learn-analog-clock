@@ -1,6 +1,8 @@
 import useDragClock from '../hooks/useDragClock';
+import { useTranslation } from 'react-i18next';
 
 export default function HourDial({ totalSeconds, setTotalSeconds, activeDrag, setActiveDrag, isDarkMode }) {
+    const { t } = useTranslation();
     const type = 'hours';
     const { svgRef, handlePointerDown } = useDragClock({ type, setTotalSeconds, activeDrag, setActiveDrag, step: 30, secondsPerRevolution: 43200 });
 
@@ -27,7 +29,7 @@ export default function HourDial({ totalSeconds, setTotalSeconds, activeDrag, se
             <div 
                 className="clock-dial relative rounded-full shadow-xl dark:shadow-slate-900/50 border-[5px] cursor-grab active:cursor-grabbing hover:scale-105 transition-all duration-300 bg-white dark:bg-slate-800 border-slate-800 dark:border-slate-700"
                 style={{ width: '220px', height: '220px' }}
-                onPointerDown={handlePointerDown} ref={svgRef} title="Drag to change hours"
+                onPointerDown={handlePointerDown} ref={svgRef} title={t('dragHour')}
             >
                 <svg viewBox="0 0 100 100" className="w-full h-full pointer-events-none">
                     {ticks}
@@ -39,7 +41,7 @@ export default function HourDial({ totalSeconds, setTotalSeconds, activeDrag, se
                     <circle cx="50" cy="50" r="4" fill={color} />
                 </svg>
             </div>
-            <h3 className="mt-5 text-2xl font-bold capitalize text-slate-800 dark:text-slate-200 transition-colors">Hours</h3>
+            <h3 className="mt-5 text-2xl font-bold capitalize text-slate-800 dark:text-slate-200 transition-colors">{t('hours')}</h3>
         </div>
     );
 }

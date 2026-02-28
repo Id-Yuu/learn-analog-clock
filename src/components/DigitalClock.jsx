@@ -8,7 +8,7 @@ export default function DigitalClock({ time }) {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="border-[5px] border-slate-800 dark:border-slate-600 rounded-2xl px-8 py-6 bg-white dark:bg-slate-800 shadow-xl w-full max-w-[300px] text-center transition-colors duration-300">
+            <div className="border-[5px] border-slate-800 dark:border-slate-700 rounded-2xl px-8 py-6 bg-white dark:bg-slate-800 shadow-xl dark:shadow-slate-900/50 w-full max-w-[300px] text-center transition-colors duration-300">
                 <div className="text-4xl md:text-5xl font-black text-slate-800 dark:text-slate-100 tracking-wider font-mono transition-colors">
                     {formatDigitalTime(time)}
                 </div>
