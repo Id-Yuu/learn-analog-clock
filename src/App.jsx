@@ -18,6 +18,7 @@ export default function App() {
     const [targetTime, setTargetTime] = useState(null);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isAutoPlayEnabled, setIsAutoPlayEnabled] = useState(true);
     
     const [isGuideOpen, setIsGuideOpen] = useState(false);
     const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function App() {
     const resetToCurrent = () => {
         const now = new Date();
         setTime(now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds());
+        setIsAutoPlayEnabled(true);
     };
 
     useEffect(() => {
@@ -47,6 +49,22 @@ export default function App() {
             setIsSuccess(currentHM === targetHM);
         }
     }, [time, practiceMode, targetTime]);
+
+    useEffect(() => {
+        if (activeDrag) {
+            setIsAutoPlayEnabled(false);
+        }
+    }, [activeDrag]);
+
+    useEffect(() => {
+        if (!isAutoPlayEnabled) return;
+
+        const timerId = setInterval(() => {
+            setTime((prevTime) => (prevTime + 1) % 86400);
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [isAutoPlayEnabled]);
 
     const generatePractice = () => {
         const h = Math.floor(Math.random() * 12) + 1; 
