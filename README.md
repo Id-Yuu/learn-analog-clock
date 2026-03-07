@@ -10,6 +10,13 @@ With the rapid shift to smartphones and digital devices, reading an analog clock
 
 **This project exists to fix that.** By splitting the clock into three separate, interactive dials (Hours, Minutes, Seconds) and mathematically binding them together, users can physically *feel* how time works. When they drag the minute hand a full 360 degrees, they instantly see the hour hand advance proportionally, creating an intuitive "aha!" moment that bridges the gap between digital habits and analog skills.
 
+## 📌 Feature
+- Quiz
+- Dark mode
+- Practice test by Drag to view
+- Multiple Language (Indonesia and English) 
+
+
 ## 🚀 Quick Start
 
 Copy and paste this single command into your terminal to clone the repository, install dependencies, and start the development server all at once:
